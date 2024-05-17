@@ -5,147 +5,14 @@
 // Укажите правильные типы.
 // По возможности пришлите Ваш вариант в https://codesandbox.io
 
-import React, {
-  memo, useCallback, useRef, useState,
-} from 'react';
+import React, {useCallback, useState} from 'react';
+import {API, LS} from "./utils";
+import {useThrottle} from "./hooks";
+import {PLACEHOLDER_API_URL} from "./constants";
+import {GetUserInfoButton, UserInfo} from "./components";
+import {User} from "./types";
 
-type Company = {
-  bs: string;
-  catchPhrase: string;
-  name: string;
-};
-
-type Address = {
-  city: string;
-  geo: {
-    lat: string;
-    lng: string;
-    street: string;
-    suite: string;
-    zipcode: string;
-  }
-};
-
-type User = {
-  id: number;
-  email: string;
-  name: string;
-  phone: string;
-  username: string;
-  website: string;
-  company: Company;
-  address: Address;
-};
-
-const LovelyAPIURL = 'https://jsonplaceholder.typicode.com/users';
-
-const DEFAULT_THROTTLE_MS = 800;
-
-class LS {
-  static getValue(key: string) {
-    try {
-      return localStorage.getItem(key)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  static setValue<T>(key: string, value: T) {
-    localStorage.setItem(key, JSON.stringify(value))
-  }
-}
-
-class API {
-  constructor(public baseURL: string) {}
-
-  async getData<T, K>(args: K): Promise<T | null> {
-    try {
-      const response = await fetch(`${this.baseURL}/${args}`);
-
-      return await response.json();
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  }
-}
-
-const LovelyAPI = new API(LovelyAPIURL);
-
-const getRemainingTime = (lastTriggeredTime: number, throttleMs: number) => {
-  const elapsedTime = Date.now() - lastTriggeredTime;
-  const remainingTime = throttleMs - elapsedTime;
-
-  return (remainingTime < 0) ? 0 : remainingTime;
-};
-
-type useThrottleProps = {
-  callbackFn: <T, >(args?: T) => any
-  throttleMs?: number
-};
-
-function useThrottle({
-  callbackFn,
-  throttleMs = DEFAULT_THROTTLE_MS,
-}: useThrottleProps) {
-  const lastTriggered = useRef<number>(Date.now());
-  const timeoutRef = useRef<NodeJS.Timeout|null>(null);
-
-  return useCallback(<T, >(args?: T) => {
-    let remainingTime = getRemainingTime(lastTriggered.current, throttleMs);
-
-    if (remainingTime === 0) {
-      lastTriggered.current = Date.now();
-      callbackFn(args);
-    } else if (!timeoutRef.current) {
-      timeoutRef.current = setTimeout(() => {
-        remainingTime = getRemainingTime(lastTriggered.current, throttleMs);
-
-        if (remainingTime === 0) {
-          lastTriggered.current = Date.now();
-          callbackFn(args);
-        }
-      }, remainingTime);
-    }
-  }, [callbackFn, throttleMs]);
-}
-
-interface GetUserInfoButtonProps {
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
-
-function _GetUserInfoButton({ onClick }: GetUserInfoButtonProps): JSX.Element {
-  return (
-    <button type="button" onClick={onClick}>
-      get random user
-    </button>
-  );
-}
-
-const GetUserInfoButton = memo(_GetUserInfoButton);
-
-interface IUserInfoProps {
-  user: User;
-}
-
-function UserInfo({ user }: IUserInfoProps): JSX.Element {
-  return (
-    <table>
-      <thead>
-      <tr>
-        <th>Username</th>
-        <th>Phone number</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>{user.name}</td>
-        <td>{user.phone}</td>
-      </tr>
-      </tbody>
-    </table>
-  );
-}
+const PlaceholderAPI = new API(PLACEHOLDER_API_URL);
 
 function App(): JSX.Element {
   const [userInfo, setUserInfo] = useState<User | null>(null);
@@ -161,7 +28,7 @@ function App(): JSX.Element {
     if (cachedUser) {
       setUserInfo(JSON.parse(cachedUser));
     } else {
-      const user = await LovelyAPI.getData<User, number>(userId);
+      const user = await PlaceholderAPI.getData<User, number>(userId);
       user && LS.setValue<User>(`${userId}`, user)
 
       setUserInfo(user);
