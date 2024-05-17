@@ -26,6 +26,7 @@ function App(): JSX.Element {
     const cachedUser = LS.getValue(`${userId}`)
 
     if (cachedUser) {
+      // TODO: set cache work in API ???
       setUserInfo(JSON.parse(cachedUser));
     } else {
       const user = await PlaceholderAPI.getData<User, number>(userId);
