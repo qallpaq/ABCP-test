@@ -170,7 +170,7 @@ function App(): JSX.Element {
 
   const receiveRandomUserThrottled = useThrottle({
     callbackFn: receiveRandomUser as <T>(args?: (T | undefined)) => any,
-    throttleMs: 100, // TODO: change to 1000
+    throttleMs: 1000,
   });
 
   return (
