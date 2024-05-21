@@ -6,7 +6,7 @@
 // По возможности пришлите Ваш вариант в https://codesandbox.io
 
 import React, {useCallback, useState} from 'react';
-import {API, LS} from "./utils";
+import {API} from "./utils";
 import {useThrottle} from "./hooks";
 import {PLACEHOLDER_API_URL} from "./constants";
 import {GetUserInfoButton, UserInfo} from "./components";
@@ -23,22 +23,14 @@ function App(): JSX.Element {
     event.stopPropagation();
 
     const userId = Math.floor(Math.random() * (10 - 1)) + 1;
-    const cachedUser = LS.getValue(`${userId}`)
+    const user = await PlaceholderAPI.getData<User, number>(userId, userId);
 
-    if (cachedUser) {
-      // TODO: set cache work in API ???
-      setUserInfo(JSON.parse(cachedUser));
-    } else {
-      const user = await PlaceholderAPI.getData<User, number>(userId);
-      user && LS.setValue<User>(`${userId}`, user)
-
-      setUserInfo(user);
-    }
+    setUserInfo(user);
   }, []);
 
   const receiveRandomUserThrottled = useThrottle({
     callbackFn: receiveRandomUser as <T>(args?: (T | undefined)) => any,
-    throttleMs: 1000,
+    throttleMs: 500,
   });
 
   return (
