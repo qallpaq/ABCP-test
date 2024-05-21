@@ -1,7 +1,2 @@
-import GetUserInfoButton from "./GetUserInfoButton";
-import UserInfo from "./UserInfo";
-
-export {
-  GetUserInfoButton,
-  UserInfo,
-}
+export { default as Button } from './Button';
+export { default as UserInfo } from './UserInfo';

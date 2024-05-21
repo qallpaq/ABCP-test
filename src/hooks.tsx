@@ -1,4 +1,4 @@
-import {useCallback, useRef} from "react";
+import { useCallback, useRef } from 'react';
 
 const DEFAULT_THROTTLE_MS = 800;
 
@@ -13,7 +13,6 @@ type useThrottleProps = {
   callbackFn: <T, >(args?: T) => any
   throttleMs?: number
 };
-
 
 function useThrottle({
   callbackFn,
@@ -43,4 +42,4 @@ function useThrottle({
 
 export {
   useThrottle,
-}
+};

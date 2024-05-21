@@ -10,6 +10,7 @@
     "@types/node": "^16.18.97",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
+    "eslint-config-airbnb": "^19.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -25,8 +26,33 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "airbnb"
+    ],
+    "rules": {
+      "import/extensions": "off",
+      "import/no-unresolved": "off",
+      "react/jsx-filename-extension": "off",
+      "no-unused-expressions": "off",
+      "no-empty-function": "off",
+      "max-classes-per-file": "off",
+      "no-unused-vars": "off",
+      "react/jsx-props-no-spreading": "off",
+      "import/prefer-default-export": "off",
+      "class-methods-use-this": "off",
+      "react/require-default-props": "off",
+      "react/react-in-jsx-scope": "off",
+      "consistent-return": "off",
+      "no-shadow": "off",
+      "semi": [
+        "error",
+        "always"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ]
+    }
   },
   "browserslist": {
     "production": [
